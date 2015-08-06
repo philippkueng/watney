@@ -1,0 +1,6 @@
+(defproject watney "0.1.0-SNAPSHOT"
+  :description "HTML to Markdown converter"
+  :url "https://github.com/philippkueng/watney"
+  :license {:name "MIT"
+            :url "http://opensource.org/licenses/MIT"}
+  :dependencies [[org.clojure/clojure "1.6.0"]])
