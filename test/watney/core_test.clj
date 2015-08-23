@@ -1,7 +1,6 @@
 (ns watney.core-test
-  (:require [clojure.test :refer :all]
-            [watney.core :refer :all]))
+  (:require [watney.core :as w])
+  (:use midje.sweet))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(fact "parsing the simple.html file should return a correct simple.md"
+  (w/convert (slurp "fixtures/simple.html")) => (slurp "fixtures/simple.md"))
