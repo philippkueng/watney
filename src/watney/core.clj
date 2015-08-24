@@ -1,5 +1,6 @@
 (ns watney.core
-  (:require [net.cgrand.enlive-html :as html]))
+  (:require [net.cgrand.enlive-html :as html]
+            [clojure.string :as str]))
 
 (defn ^:private parse
   "Parse the given HTML using Enlive and return the tree"
