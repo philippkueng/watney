@@ -26,5 +26,9 @@
 (defn convert
   "Convert the HTML string given into Markdown"
   [html-string]
-  html-string)
+  (-> html-string
+      parse
+      convert-entity
+      (str "\n")))
+
 
