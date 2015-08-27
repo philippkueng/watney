@@ -19,6 +19,7 @@
                 :h2 (str "## " (first (:content node)))
                 :h3 (str "### " (first (:content node)))
                 :h4 (str "#### " (first (:content node)))
+                :li (str "* " (first (:content node)))
                 (convert-entity (:content node)))))
        (remove empty?)
        (str/join "\n")))
