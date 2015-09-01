@@ -9,6 +9,11 @@
       java.io.StringReader.
       html/html-resource))
 
+(defn ^:private contains-node?
+  "Given an enlive tree, tells if a given element is contained in the first level"
+  [html-tree element]
+  (some #(= element (:tag %)) html-tree))
+
 (defn ^:private convert-entity
   "Returns Markdown when given an Enlive data tree."
   [html-tree]
@@ -19,7 +24,11 @@
                 :h2 (str "## " (first (:content node)))
                 :h3 (str "### " (first (:content node)))
                 :h4 (str "#### " (first (:content node)))
-                :li (str "* " (first (:content node)))
+
+                ;; if any of the children of this :li is a :ul, then return 2 spaces here
+                :li (if (contains-node? (:content node) :ul)
+                      (str "  " (convert-entity (:content node)))
+                      (str "* " (first (:content node))))
                 (convert-entity (:content node)))))
        (remove empty?)
        (str/join "\n")))
