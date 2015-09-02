@@ -16,22 +16,29 @@
 
 (defn ^:private convert-entity
   "Returns Markdown when given an Enlive data tree."
-  [html-tree]
-  (->> html-tree
-       (map (fn [node]
-              (case (:tag node)
-                :h1 (str "# " (first (:content node)))
-                :h2 (str "## " (first (:content node)))
-                :h3 (str "### " (first (:content node)))
-                :h4 (str "#### " (first (:content node)))
+  ([html-tree]
+   (->> html-tree
+        (map (fn [node]
+               (case (:tag node)
+                 :h1 (str "# " (first (:content node)))
+                 :h2 (str "## " (first (:content node)))
+                 :h3 (str "### " (first (:content node)))
+                 :h4 (str "#### " (first (:content node)))
 
-                ;; if any of the children of this :li is a :ul, then return 2 spaces here
-                :li (if (contains-node? (:content node) :ul)
-                      (str "  " (convert-entity (:content node)))
-                      (str "* " (first (:content node))))
-                (convert-entity (:content node)))))
-       (remove empty?)
-       (str/join "\n")))
+                 ;; if any of the children of this :li is a :ul, then return 2 spaces here
+                 :li (if (contains-node? (:content node) :ul)
+                       (str (if (= (type (first (:content node))) java.lang.String)
+                              (str "* " (first (:content node)))
+                              nil)
+                            (convert-entity (:content node) "  "))
+                       (str "* " (first (:content node))))
+                 (convert-entity (:content node)))))
+        (remove empty?)
+        (str/join "\n")))
+
+  ([html-tree prefix-string]
+   (str prefix-string
+        (convert-entity html-tree))))
 
 (defn convert
   "Convert the HTML string given into Markdown"
