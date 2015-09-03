@@ -28,10 +28,16 @@
                  ;; if any of the children of this :li is a :ul, then return 2 spaces here
                  :li (if (contains-node? (:content node) :ul)
                        (str (if (= (type (first (:content node))) java.lang.String)
-                              (str "* " (first (:content node)))
+                              (str "*  " (first (:content node)) "\n")
                               nil)
-                            (convert-entity (:content node) "  "))
-                       (str "* " (first (:content node))))
+                            (->> (:content node)
+                                 (filter #(= (:tag %) :ul))
+                                 first
+                                 :content
+                                 (map (fn [entity]
+                                        (convert-entity (list entity) "  ")))
+                                 (str/join "\n")))
+                       (str "*  " (first (:content node))))
                  (convert-entity (:content node)))))
         (remove empty?)
         (str/join "\n")))
@@ -49,3 +55,9 @@
       (str "\n")))
 
 
+
+
+ #_(def tables (-> the-page
+                    java.io.StringReader.
+                    html/html-resource
+                    (html/select [:table :table])))
