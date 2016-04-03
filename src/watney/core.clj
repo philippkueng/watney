@@ -48,10 +48,7 @@
                            (str "*  " (first (:content node))))
                      (convert-entity (:content node) 0))))
             (remove empty?)
-            (str/join "\n")))
-
-   (str prefix-string
-        (convert-entity html-tree))))
+            (str/join "\n"))))
 
 (defn convert
   "Convert the HTML string given into Markdown"
