@@ -1,5 +1,7 @@
 # Watney
 
+[![Join the chat at https://gitter.im/philippkueng/watney](https://badges.gitter.im/philippkueng/watney.svg)](https://gitter.im/philippkueng/watney?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 HTML to Markdown converter
 
 ## Tests
