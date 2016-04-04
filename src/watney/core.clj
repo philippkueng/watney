@@ -32,6 +32,7 @@
                      :h2 (str "## " (first (:content node)))
                      :h3 (str "### " (first (:content node)))
                      :h4 (str "#### " (first (:content node)))
+                     :p  (str "\n" (first (:content node)))
 
                      ;; if any of the children of this :li is a :ul, then return 2 spaces here
                      :li (if (contains-node? (:content node) :ul)
