@@ -2,6 +2,8 @@
 
 HTML to Markdown converter
 
+[![Circle CI](https://circleci.com/gh/philippkueng/watney.svg?style=svg)](https://circleci.com/gh/philippkueng/watney)
+
 ## Tests
 
 ```bash
