@@ -39,6 +39,7 @@
                                                  (->> (convert-entity (list sub-node) prefix-spaces)))))
                                         (clojure.string/join "")))
                      :a  (str "[" (first (:content node)) "](" (:href (:attrs node)) ")")
+                     :img (str "![" (:alt (:attrs node)) "](" (:src (:attrs node)) ")")
 
                      ;; if any of the children of this :li is a :ul, then return 2 spaces here
                      :li (if (contains-node? (:content node) :ul)
