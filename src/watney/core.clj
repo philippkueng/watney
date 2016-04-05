@@ -32,7 +32,13 @@
                      :h2 (str "## " (first (:content node)))
                      :h3 (str "### " (first (:content node)))
                      :h4 (str "#### " (first (:content node)))
-                     :p  (str "\n" (first (:content node)))
+                     :p  (str "\n" (->> (:content node)
+                                        (map (fn [sub-node]
+                                               (if (= (type sub-node) java.lang.String)
+                                                 sub-node
+                                                 (->> (convert-entity (list sub-node) prefix-spaces)))))
+                                        (clojure.string/join "")))
+                     :a  (str "[" (first (:content node)) "](" (:href (:attrs node)) ")")
 
                      ;; if any of the children of this :li is a :ul, then return 2 spaces here
                      :li (if (contains-node? (:content node) :ul)
