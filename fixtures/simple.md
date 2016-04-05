@@ -14,3 +14,5 @@
   *  second sublist entry
 
 this is a paragraph [link](http://test.example)
+
+[link 2](http://this.is.another.link)
