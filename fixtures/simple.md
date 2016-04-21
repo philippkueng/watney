@@ -18,5 +18,4 @@ this is a paragraph [link](http://test.example)
 [link 2](http://this.is.another.link)
 
 this is another paragraph with a funny ![image](http://server.tld/image.gif) and a funny caption
-
 ### h3 [link](http://test.example)
