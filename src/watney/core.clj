@@ -39,13 +39,15 @@
          (->> html-tree
               (map (fn [node]
                      (case (:tag node)
-                       :h1 (str "# " (convert-content node))
-                       :h2 (str "## " (convert-content node))
-                       :h3 (str "### " (convert-content node))
-                       :h4 (str "#### " (convert-content node))
+                       :h1 (str "\n# " (convert-content node))
+                       :h2 (str "\n## " (convert-content node))
+                       :h3 (str "\n### " (convert-content node))
+                       :h4 (str "\n#### " (convert-content node))
                        :p  (str "\n" (convert-content node))
                        :a  (str "[" (first (:content node)) "](" (:href (:attrs node)) ")")
                        :img (str "![" (:alt (:attrs node)) "](" (:src (:attrs node)) ")")
+
+                       :ul (str "\n" (convert-entity (:content node) 0))
 
                        ;; if any of the children of this :li is a :ul, then return 2 spaces here
                        :li (if (contains-node? (:content node) :ul)
@@ -64,14 +66,23 @@
               (remove empty?)
               (str/join "\n")))))
 
+(defn ^:private without-first-character
+  "Returns the content string without the first character"
+  [content]
+  (->> content
+       rest
+       (apply str)))
+
 (defn convert
   "Convert the HTML string given into Markdown"
   [html-string]
   (-> html-string
       parse
       (convert-entity 0)
-      (str "\n")))
-
+      (str "\n")
+      
+      ;; remove the first newline character (top of the file) introduced when converting the html
+      without-first-character))
 
 
 
