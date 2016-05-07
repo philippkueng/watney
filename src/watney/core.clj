@@ -21,21 +21,23 @@
        (map (fn [i] " "))
        (apply str)))
 
-(defn ^:private convert-content
-  "Return the converted contents of an element."
-  [contents prefix-spaces]
-  )
+(defn ^:private list-prefix-character
+  "Returnes `1.  ` or `*  ` depending on what kind of list it is"
+  [options]
+  (if (= :ol (:list-type options))
+    "1. "
+    "* "))
 
 (defn ^:private convert-entity
   "Returns Markdown when given an Enlive data tree."
-  [html-tree prefix-spaces]
+  [html-tree options]
   (let [convert-content #(->> (:content %)
                               (map (fn [sub-node]
                                      (if (= (type sub-node) java.lang.String)
                                        sub-node
-                                       (->> (convert-entity (list sub-node) prefix-spaces)))))
+                                       (->> (convert-entity (list sub-node) options)))))
                               (clojure.string/join ""))]
-    (str (whitespace-str prefix-spaces)
+    (str (whitespace-str (:prefix-spaces options))
          (->> html-tree
               (map (fn [node]
                      (case (:tag node)
@@ -47,22 +49,31 @@
                        :a  (str "[" (first (:content node)) "](" (:href (:attrs node)) ")")
                        :img (str "![" (:alt (:attrs node)) "](" (:src (:attrs node)) ")")
 
-                       :ul (str "\n" (convert-entity (:content node) 0))
+                       :ul (str "\n" (convert-entity (:content node) {:prefix-spaces 0
+                                                                      :list-type :ul}))
+                       :ol (str "\n" (convert-entity (:content node) {:prefix-spaces 0
+                                                                      :list-type :ol}))
 
                        ;; if any of the children of this :li is a :ul, then return 2 spaces here
-                       :li (if (contains-node? (:content node) :ul)
+                       :li (if (or (contains-node? (:content node) :ol)
+                                   (contains-node? (:content node) :ul))
                              (str (if (= (type (first (:content node))) java.lang.String)
-                                    (str "*  " (first (:content node)) "\n")
+                                    (str (list-prefix-character options)
+                                         (first (:content node))
+                                         "\n")
                                     nil)
                                   (->> (:content node)
-                                       (filter #(= (:tag %) :ul))
+                                       (filter #(or (= (:tag %) :ul)
+                                                    (= (:tag %) :ol)))
                                        first
                                        :content
                                        (map (fn [entity]
-                                              (convert-entity (list entity) (+ prefix-spaces 2))))
+                                              (convert-entity (list entity) (assoc options
+                                                                                   :prefix-spaces (+ (:prefix-spaces options) 2)))))
                                        (str/join "\n")))
-                             (str "*  " (first (:content node))))
-                       (convert-entity (:content node) 0))))
+                             (str (list-prefix-character options)
+                                  (first (:content node))))
+                       (convert-entity (:content node) {:prefix-spaces 0}))))
               (remove empty?)
               (str/join "\n")))))
 
@@ -78,7 +89,7 @@
   [html-string]
   (-> html-string
       parse
-      (convert-entity 0)
+      (convert-entity {:prefix-spaces 0})
       (str "\n")
       
       ;; remove the first newline character (top of the file) introduced when converting the html
