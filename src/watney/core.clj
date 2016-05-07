@@ -48,6 +48,7 @@
                        :p  (str "\n" (convert-content node))
                        :a  (str "[" (first (:content node)) "](" (:href (:attrs node)) ")")
                        :img (str "![" (:alt (:attrs node)) "](" (:src (:attrs node)) ")")
+                       :code (str "`" (convert-content node) "`")
 
                        :ul (str "\n" (convert-entity (:content node) {:prefix-spaces 0
                                                                       :list-type :ul}))

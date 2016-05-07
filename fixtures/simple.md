@@ -32,3 +32,5 @@ this is another paragraph with a funny ![image](http://server.tld/image.gif) and
   1. second sublist entry
 1. second list entry
 1. third list entry
+
+this is `some inline code`.
