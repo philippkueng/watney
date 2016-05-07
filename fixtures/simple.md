@@ -34,3 +34,13 @@ this is another paragraph with a funny ![image](http://server.tld/image.gif) and
 1. third list entry
 
 this is `some inline code`.
+
+```bash
+./foo/bar.sh
+```
+
+this is a sample of code without a language specified.
+
+```
+# some markdown sample code
+```
