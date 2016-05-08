@@ -45,7 +45,13 @@
                        :h2 (str "\n## " (convert-content node))
                        :h3 (str "\n### " (convert-content node))
                        :h4 (str "\n#### " (convert-content node))
-                       :p  (str "\n" (convert-content node))
+                       :p  (str (if (:blockquote options)
+                                  nil
+                                  "\n")
+                                (convert-content node))
+                       :blockquote (str "\n> " (->> (convert-entity (:content node) (assoc options
+                                                                                           :blockquote true))
+                                                    str/trim))
                        :a  (str "[" (first (:content node)) "](" (:href (:attrs node)) ")")
                        :img (str "![" (:alt (:attrs node)) "](" (:src (:attrs node)) ")")
                        :code (if (:code-block options)
